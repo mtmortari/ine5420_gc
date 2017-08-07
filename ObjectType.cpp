@@ -1,0 +1,1 @@
+enum ObjectType{ point, line, polygon};
