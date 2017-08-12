@@ -4,6 +4,7 @@
 #include "Point2D.h"
 #include "DrawableObject.h"
 #include "ObjectType.cpp"
+#include "View.h"
 
 
 static cairo_surface_t *surface = NULL;
@@ -15,6 +16,9 @@ std::list<DrawableObject> display_file;
 GtkWidget *window;
 GtkWidget *drawing_area;
 //GtkWidget *new_object_dialog;
+
+View main_window;
+View viewport;
 
 
 
@@ -63,9 +67,10 @@ extern "C" G_MODULE_EXPORT void add_new_object_dialog()
   //gtk_window_present( GTK_WINDOW( new_object_dialog ) );
 
   cairo_t *cr;
-  cr = cairo_create (surface);
-  cairo_move_to(cr, 300, 200);
-  cairo_line_to(cr, 200, 100);
+  cr = cairo_create (surface);  
+  cairo_move_to(cr, viewport.transformX(0, main_window), viewport.transformY(0, main_window));
+  cairo_line_to(cr, viewport.transformX(200, main_window), viewport.transformY(200, main_window));
+  cairo_line_to(cr, viewport.transformX(400, main_window), viewport.transformY(200, main_window));
   cairo_stroke(cr);
   gtk_widget_queue_draw (window);
 } 
@@ -124,8 +129,8 @@ void drawNewObject()
     case POINT:
     {
       Point2D point = obj.getPoints().back();
-      cairo_move_to(cr, point.getX(), point.getY());
-      cairo_line_to(cr, point.getX(), point.getY());
+      cairo_move_to(cr, viewport.transformX(point.getX(), main_window), viewport.transformY(point.getY(), main_window));
+      cairo_line_to(cr, viewport.transformX(point.getX(), main_window), viewport.transformY(point.getY(), main_window));
       cairo_stroke(cr);
       gtk_widget_queue_draw (window);
       break;
@@ -134,8 +139,8 @@ void drawNewObject()
     {
       Point2D origin = obj.getPoints().front();
       Point2D end = obj.getPoints().back();
-      cairo_move_to(cr, origin.getX(), origin.getY());
-      cairo_line_to(cr, end.getX(), end.getY());
+      cairo_move_to(cr, viewport.transformX(origin.getX(), main_window), viewport.transformY(origin.getY(), main_window));
+      cairo_line_to(cr, viewport.transformX(end.getX(), main_window), viewport.transformY(end.getY(), main_window));
       cairo_stroke(cr);
       gtk_widget_queue_draw (window);
       break;
@@ -147,7 +152,7 @@ void drawNewObject()
 
       for (std::list<Point2D>::iterator it=obj.getPoints().begin(); it != obj.getPoints().end(); ++it)
       {          
-          cairo_line_to(cr, it->getX(), it->getY());
+        cairo_line_to(cr, viewport.transformX(it->getX(), main_window), viewport.transformY(it->getY(), main_window));
       }    
       cairo_stroke(cr);
       gtk_widget_queue_draw (window);
@@ -159,6 +164,31 @@ void drawNewObject()
   }
 
 }
+
+void draw_y_axis(){
+  cairo_t *cr;
+  cr = cairo_create (surface);
+  cairo_move_to(cr, viewport.transformX(0, main_window), viewport.transformY(500, main_window));
+  cairo_line_to(cr, viewport.transformX(0, main_window), viewport.transformY(-500, main_window));
+  cairo_stroke(cr);
+  gtk_widget_queue_draw (window);
+}
+
+void draw_x_axis(){
+  cairo_t *cr;
+  cr = cairo_create (surface);
+  cairo_move_to(cr, viewport.transformX(500, main_window), viewport.transformY(0, main_window));
+  cairo_line_to(cr, viewport.transformX(-500, main_window), viewport.transformY(0, main_window));
+  cairo_stroke(cr);
+  gtk_widget_queue_draw (window);
+}
+
+
+void draw_axis(){
+  draw_x_axis();
+  draw_y_axis();
+}
+
 
 
 
@@ -187,8 +217,22 @@ int main (int   argc, char *argv[])
 
   //g_signal_connect (window, "configure-event", G_CALLBACK (add_new_object_dialog), NULL);
   
+  
 
-  gtk_main ();
+  main_window.setXMin(-1000.0);
+  main_window.setYMin(-1000.0);
+  main_window.setXMax(1000.0);
+  main_window.setYMax(1000.0);
+
+
+  viewport.setXMin(-250.0);
+  viewport.setYMin(-250.0);
+  viewport.setXMax(250.0);
+  viewport.setYMax(250.0);
+
+  gtk_main();  
+
+  draw_axis();
 
   //test
 	Point2D point;
