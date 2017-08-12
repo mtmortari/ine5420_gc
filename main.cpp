@@ -1,11 +1,15 @@
 #include <gtk/gtk.h>
 #include <list>
+#include <vector>
 #include "Point2D.h"
 #include "DrawableObject.h"
 #include "ObjectType.cpp"
 
+
+static cairo_surface_t *surface = NULL;
+
 //list of objects that are gonna be drawn
-std::list<DrawableObject> *display_file;
+std::list<DrawableObject> display_file;
 
 GtkBuilder *builder;
 GtkWidget *window;
@@ -13,6 +17,18 @@ GtkWidget *drawing_area;
 GtkWidget *new_object_dialog;
 
 
+
+/* removes all objects from the surface and clears the display_file*/
+static void clear_surface (){
+  cairo_t *cr;
+  cr = cairo_create (surface);
+  cairo_set_source_rgb (cr, 1, 1, 1);
+  cairo_paint (cr);
+  cairo_destroy (cr);
+
+  // clears the list
+  display_file.clear();
+}
 
 /* Function that will be called when the button new object is called, to it can open a dialog to add new objects to
   the display file
