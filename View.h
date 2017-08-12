@@ -1,11 +1,11 @@
 /* 
-	viewport entity
+	generic view entity
 */
 
-#ifndef VIEWPORT_H
-#define VIEWPORT_H
+#ifndef VIEW_H
+#define VIEW_H
 
-class ViewPort{
+class VIEW{
 	private:
 		int x_min, y_min, x_max, y_max;
 
