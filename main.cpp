@@ -4,9 +4,8 @@
 #include "DrawableObject.h"
 #include "ObjectType.cpp"
 
-
-
-std::list<DrawableObject> object_list;
+//list of objects that are gonna be drawn
+std::list<DrawableObject> *display_file;
 
 GtkBuilder *builder;
 GtkWidget *window;
@@ -15,7 +14,9 @@ GtkWidget *new_object_dialog;
 
 
 
-/*Function that will be called when the ok button is pressed*/
+/* Function that will be called when the button new object is called, to it can open a dialog to add new objects to
+  the display file
+*/
 G_MODULE_EXPORT void add_new_object_dialog()
 {
   gtk_window_present( GTK_WINDOW( new_object_dialog ) );

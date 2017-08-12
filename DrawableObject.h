@@ -1,5 +1,5 @@
-/* classe que representa um objeto que pode ser desenhado
-
+/* 
+	represents an object that is gonna be drawn in the window
 */
 
 #include <list>
