@@ -6,7 +6,6 @@
 #include "ObjectType.cpp"
 #include "View.h"
 
-
 static cairo_surface_t *surface = NULL;
 
 //list of objects that are gonna be drawn
@@ -24,14 +23,16 @@ View viewport;
 //method declaratrions
 static void clear_surface();
 static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpointer data);
-static gboolean redraw (GtkWidget *widget, cairo_t   *cr,  gpointer   data);
+static gboolean redraw (GtkWidget *widget, cairo_t *cr, gpointer data);
+extern "C" G_MODULE_EXPORT void add_new_object_dialog();
+
 void drawNewObject(DrawableObject obj);
 void addPoint(double x, double y, std::string name);
 void addLine(double x1, double y1, double x2, double y2, std::string name);
 void draw_y_axis();
 void draw_x_axis();
 void draw_axis();
-extern "C" G_MODULE_EXPORT void add_new_object_dialog();
+
 
 
 //method implementations
@@ -65,7 +66,7 @@ static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpo
 
 
 /* Redraw the screen from the surface */
-static gboolean redraw (GtkWidget *widget, cairo_t   *cr,  gpointer   data){
+static gboolean redraw (GtkWidget *widget, cairo_t *cr, gpointer data){
   cairo_set_source_surface (cr, surface, 0, 0);
   cairo_paint (cr);
 
@@ -165,8 +166,6 @@ void addLine(double x1, double y1, double x2, double y2, std::string name)
   drawNewObject(display_file.back());
 }
 
-
-
 void draw_y_axis(){
   cairo_t *cr;
   cr = cairo_create (surface);
@@ -197,8 +196,10 @@ extern "C" G_MODULE_EXPORT void add_new_object_dialog()
 {
   //gtk_window_present( GTK_WINDOW( new_object_dialog ) );
   addLine(0.0, 0.0, 200.0, 400.0, "TESTE");
+  addLine(300.0, -200.0, 500.0, -150.0, "BLA");
 } 
 
+//MAIN 
 int main (int   argc, char *argv[])
 {
   gtk_init (&argc, &argv);
@@ -235,8 +236,5 @@ int main (int   argc, char *argv[])
   gtk_main();  
 
   draw_axis();
-
-  
-
   return 0;
 }
