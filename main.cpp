@@ -148,12 +148,16 @@ void drawNewObject()
     case POLYGON:
     {
       Point2D origin = obj.getPoints().front();
-      cairo_move_to(cr, origin.getX(), origin.getY());
+      Point2D end = obj.getPoints().back();
+      cairo_move_to(cr, viewport.transformX(origin.getX(), main_window), viewport.transformX(origin.getY(), main_window));
 
       for (std::list<Point2D>::iterator it=obj.getPoints().begin(); it != obj.getPoints().end(); ++it)
       {          
         cairo_line_to(cr, viewport.transformX(it->getX(), main_window), viewport.transformY(it->getY(), main_window));
       }    
+      cairo_line_to(cr, viewport.transformX(end.getX(), main_window), viewport.transformY(end.getY(), main_window));
+
+
       cairo_stroke(cr);
       gtk_widget_queue_draw (window);
       break;
@@ -168,8 +172,8 @@ void drawNewObject()
 void draw_y_axis(){
   cairo_t *cr;
   cr = cairo_create (surface);
-  cairo_move_to(cr, viewport.transformX(0, main_window), viewport.transformY(500, main_window));
-  cairo_line_to(cr, viewport.transformX(0, main_window), viewport.transformY(-500, main_window));
+  cairo_move_to(cr, viewport.transformX(0, main_window), viewport.transformY(1000, main_window));
+  cairo_line_to(cr, viewport.transformX(0, main_window), viewport.transformY(-1000, main_window));
   cairo_stroke(cr);
   gtk_widget_queue_draw (window);
 }
@@ -177,20 +181,16 @@ void draw_y_axis(){
 void draw_x_axis(){
   cairo_t *cr;
   cr = cairo_create (surface);
-  cairo_move_to(cr, viewport.transformX(500, main_window), viewport.transformY(0, main_window));
-  cairo_line_to(cr, viewport.transformX(-500, main_window), viewport.transformY(0, main_window));
+  cairo_move_to(cr, viewport.transformX(1000, main_window), viewport.transformY(0, main_window));
+  cairo_line_to(cr, viewport.transformX(-1000, main_window), viewport.transformY(0, main_window));
   cairo_stroke(cr);
   gtk_widget_queue_draw (window);
 }
-
 
 void draw_axis(){
   draw_x_axis();
   draw_y_axis();
 }
-
-
-
 
 int main (int   argc, char *argv[])
 {
@@ -205,9 +205,6 @@ int main (int   argc, char *argv[])
   window = GTK_WIDGET( gtk_builder_get_object( builder, "window" ) );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( builder, "drawing_area" ) );
 
-  //new_object_dialog = GTK_WIDGET( gtk_builder_get_object( builder, "new_object_dialog" ) );
-
-
   g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
   g_signal_connect (drawing_area, "configure-event", G_CALLBACK (create_surface), NULL);
 
@@ -217,8 +214,6 @@ int main (int   argc, char *argv[])
 
   //g_signal_connect (window, "configure-event", G_CALLBACK (add_new_object_dialog), NULL);
   
-  
-
   main_window.setXMin(-1000.0);
   main_window.setYMin(-1000.0);
   main_window.setXMax(1000.0);
@@ -233,18 +228,6 @@ int main (int   argc, char *argv[])
   gtk_main();  
 
   draw_axis();
-
-  //test
-	Point2D point;
-	point.setX(5.0);
-	point.setY(7.0);
-
-  ObjectType type1;
-  type1 = ObjectType::POINT;
-
-  DrawableObject obj1;
-  obj1.setName("teste");
-  obj1.setType(type1);
 
   return 0;
 }
