@@ -11,7 +11,7 @@ static cairo_surface_t *surface = NULL;
 //list of objects that are gonna be drawn
 std::list<DrawableObject> display_file;
 
-GtkBuilder *builder;
+
 GtkWidget *window;
 GtkWidget *drawing_area;
 //GtkWidget *new_object_dialog;
@@ -166,8 +166,9 @@ int main (int   argc, char *argv[])
 {
   gtk_init (&argc, &argv);
 
+  GtkBuilder *builder;
   /* Construct a GtkBuilder instance and load our UI description */
-  builder = gtk_builder_new ();
+  builder = gtk_builder_new();
   gtk_builder_add_from_file (builder, "window.glade", NULL);
 
   /* Connect signal handlers to the constructed widgets. */
@@ -181,6 +182,8 @@ int main (int   argc, char *argv[])
   g_signal_connect (drawing_area, "configure-event", G_CALLBACK (create_surface), NULL);
 
 
+  gtk_builder_connect_signals(builder, NULL);
+  gtk_widget_show_all(window);
 
   //g_signal_connect (window, "configure-event", G_CALLBACK (add_new_object_dialog), NULL);
   
