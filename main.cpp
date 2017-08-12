@@ -59,68 +59,8 @@ static gboolean redraw (GtkWidget *widget, cairo_t   *cr,  gpointer   data){
   return FALSE;
 }
 
-/* Function that will be called when the button new object is called, to it can open a dialog to add new objects to
-  the display file
-*/
-extern "C" G_MODULE_EXPORT void add_new_object_dialog()
+void drawNewObject(DrawableObject obj)
 {
-  //gtk_window_present( GTK_WINDOW( new_object_dialog ) );
-
-  cairo_t *cr;
-  cr = cairo_create (surface);  
-  cairo_move_to(cr, viewport.transformX(0, main_window), viewport.transformY(0, main_window));
-  cairo_line_to(cr, viewport.transformX(200, main_window), viewport.transformY(200, main_window));
-  cairo_line_to(cr, viewport.transformX(400, main_window), viewport.transformY(200, main_window));
-  cairo_stroke(cr);
-  gtk_widget_queue_draw (window);
-} 
-
-//adds a point to the surface
-void addPoint(double x, double y, std::string name)
-{
-  Point2D point;
-  point.setX(x);
-  point.setY(y);  
-
-  std::list<Point2D> pointList;  
-  pointList.push_front(point);
-
-  DrawableObject obj;
-  obj.setName(name);
-  obj.setType(ObjectType::POINT);
-  obj.setPoints(pointList);
-
-  display_file.push_back(obj);
-}
-
-
-//adds a line to the surface
-void addLine(double x1, double y1, double x2, double y2, std::string name)
-{
-  Point2D point1;
-  point1.setX(x1);
-  point1.setY(y1);  
-
-  Point2D point2;
-  point2.setX(x2);
-  point2.setY(y2);  
-
-  std::list<Point2D> pointList;  
-  pointList.push_back(point1);
-  pointList.push_back(point2);
-
-  DrawableObject obj;
-  obj.setName(name);
-  obj.setType(ObjectType::LINE);
-  obj.setPoints(pointList);
-
-  display_file.push_back(obj);
-}
-
-void drawNewObject()
-{
-   DrawableObject obj = display_file.back();
-
   cairo_t *cr;
   cr = cairo_create (surface);
 
@@ -169,6 +109,55 @@ void drawNewObject()
 
 }
 
+
+
+
+//adds a point to the surface
+void addPoint(double x, double y, std::string name)
+{
+  Point2D point;
+  point.setX(x);
+  point.setY(y);  
+
+  std::list<Point2D> pointList;  
+  pointList.push_front(point);
+
+  DrawableObject obj;
+  obj.setName(name);
+  obj.setType(ObjectType::POINT);
+  obj.setPoints(pointList);
+
+  display_file.push_back(obj);
+  drawNewObject(display_file.back());
+}
+
+
+//adds a line to the surface
+void addLine(double x1, double y1, double x2, double y2, std::string name)
+{
+  Point2D point1;
+  point1.setX(x1);
+  point1.setY(y1);  
+
+  Point2D point2;
+  point2.setX(x2);
+  point2.setY(y2);  
+
+  std::list<Point2D> pointList;  
+  pointList.push_back(point1);
+  pointList.push_back(point2);
+
+  DrawableObject obj;
+  obj.setName(name);
+  obj.setType(ObjectType::LINE);
+  obj.setPoints(pointList);
+
+  display_file.push_back(obj);
+  drawNewObject(display_file.back());
+}
+
+
+
 void draw_y_axis(){
   cairo_t *cr;
   cr = cairo_create (surface);
@@ -191,6 +180,15 @@ void draw_axis(){
   draw_x_axis();
   draw_y_axis();
 }
+
+/* Function that will be called when the button new object is called, to it can open a dialog to add new objects to
+  the display file
+*/
+extern "C" G_MODULE_EXPORT void add_new_object_dialog()
+{
+  //gtk_window_present( GTK_WINDOW( new_object_dialog ) );
+  addLine(0.0, 0.0, 200.0, 400.0, "TESTE");
+} 
 
 int main (int   argc, char *argv[])
 {
@@ -228,6 +226,8 @@ int main (int   argc, char *argv[])
   gtk_main();  
 
   draw_axis();
+
+  
 
   return 0;
 }
