@@ -21,6 +21,20 @@ View main_window;
 View viewport;
 
 
+//method declaratrions
+static void clear_surface();
+static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpointer data);
+static gboolean redraw (GtkWidget *widget, cairo_t   *cr,  gpointer   data);
+void drawNewObject(DrawableObject obj);
+void addPoint(double x, double y, std::string name);
+void addLine(double x1, double y1, double x2, double y2, std::string name);
+void draw_y_axis();
+void draw_x_axis();
+void draw_axis();
+extern "C" G_MODULE_EXPORT void add_new_object_dialog();
+
+
+//method implementations
 
 /* removes all objects from the surface and clears the display_file*/
 static void clear_surface (){
@@ -33,7 +47,6 @@ static void clear_surface (){
   // clears the list
   display_file.clear();
 }
-
 
 /*Creates the surface*/
 static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpointer data){
@@ -109,9 +122,6 @@ void drawNewObject(DrawableObject obj)
 
 }
 
-
-
-
 //adds a point to the surface
 void addPoint(double x, double y, std::string name)
 {
@@ -130,7 +140,6 @@ void addPoint(double x, double y, std::string name)
   display_file.push_back(obj);
   drawNewObject(display_file.back());
 }
-
 
 //adds a line to the surface
 void addLine(double x1, double y1, double x2, double y2, std::string name)
