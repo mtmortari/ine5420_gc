@@ -43,10 +43,7 @@ static void clear_surface (){
   cr = cairo_create (surface);
   cairo_set_source_rgb (cr, 1, 1, 1);
   cairo_paint (cr);
-  cairo_destroy (cr);
-
-  // clears the list
-  display_file.clear();
+  cairo_destroy (cr);  
 }
 
 /*Creates the surface*/
