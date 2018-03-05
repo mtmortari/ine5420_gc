@@ -15,6 +15,19 @@ std::list<DrawableObject> display_file;
 GtkWidget *window;
 GtkWidget *drawing_area;
 
+//point
+GtkEntry *point_x_input;
+GtkEntry *point_y_input;
+GtkEntry *point_name_input;
+
+//line
+GtkEntry *line_name_input;
+GtkEntry *line_start_x_input;
+GtkEntry *line_start_y_input;;
+GtkEntry *line_end_x_input;
+GtkEntry *line_end_y_input;
+
+
 View main_window;
 View viewport;
 
@@ -24,6 +37,9 @@ static void clear_surface();
 static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpointer data);
 static gboolean redraw (GtkWidget *widget, cairo_t *cr, gpointer data);
 extern "C" G_MODULE_EXPORT void add_new_object_dialog();
+extern "C" G_MODULE_EXPORT void button_add_line_clicked();
+extern "C" G_MODULE_EXPORT void add_point_button_signal();
+
 
 void drawNewObject(DrawableObject obj);
 void addPoint(double x, double y, std::string name);
@@ -195,6 +211,44 @@ extern "C" G_MODULE_EXPORT void add_new_object_dialog()
 
 } 
 
+
+/* Button to add a new point
+*/
+extern "C" G_MODULE_EXPORT void add_point_button_signal()
+{ 	
+	const gchar *x_text = gtk_entry_get_text( point_x_input );
+	const gchar *y_text = gtk_entry_get_text( point_y_input );
+	double x = atof (x_text);
+	double y = atof(y_text);
+
+	addPoint(x,y, "TESTE PONTO"); 
+
+} 
+
+
+/* Button to add a new line
+*/
+extern "C" G_MODULE_EXPORT void button_add_line_clicked()
+{ 	
+	const gchar *x_start_text = gtk_entry_get_text(  line_start_x_input );
+	const gchar *y_start_text = gtk_entry_get_text( line_start_y_input );
+	const gchar *x_end_text = gtk_entry_get_text( line_end_x_input );
+	const gchar *y_end_text = gtk_entry_get_text( line_end_y_input );
+	const gchar *name = gtk_entry_get_text( line_name_input );
+
+
+	double x_start = atof (x_start_text);
+	double y_start = atof(y_start_text);
+	double x_end = atof (x_end_text);
+	double y_end = atof(y_end_text);
+
+   g_print ("name %s\n", name);
+
+	addLine(x_start, y_start, x_end, y_end, name); 
+
+} 
+
+
 //MAIN 
 int main (int   argc, char *argv[])
 {
@@ -209,8 +263,23 @@ int main (int   argc, char *argv[])
   window = GTK_WIDGET( gtk_builder_get_object( builder, "main_window" ) );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( builder, "drawing_area" ) );
 
+  //point init
+  point_x_input = GTK_ENTRY( gtk_builder_get_object( builder, "point_x_input" ) );
+  point_y_input = GTK_ENTRY( gtk_builder_get_object( builder, "point_y_input" ) );
+  point_name_input = GTK_ENTRY( gtk_builder_get_object( builder, "point_name_input" ) );
+
+  //line init
+  line_start_x_input = GTK_ENTRY( gtk_builder_get_object( builder, "line_start_x_input" ) );
+  line_start_y_input = GTK_ENTRY( gtk_builder_get_object( builder, "line_start_y_input" ) );
+  line_end_x_input = GTK_ENTRY( gtk_builder_get_object( builder, "line_end_x_input" ) );
+  line_end_y_input = GTK_ENTRY( gtk_builder_get_object( builder, "line_end_y_input" ) );
+  line_name_input = GTK_ENTRY( gtk_builder_get_object( builder, "line_name_input" ) );
+
   g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
   g_signal_connect (drawing_area, "configure-event", G_CALLBACK (create_surface), NULL);
+
+
+
 
 
   gtk_builder_connect_signals(builder, NULL);
