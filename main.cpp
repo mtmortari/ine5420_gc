@@ -14,7 +14,6 @@ std::list<DrawableObject> display_file;
 
 GtkWidget *window;
 GtkWidget *drawing_area;
-//GtkWidget *new_object_dialog;
 
 View main_window;
 View viewport;
@@ -190,24 +189,24 @@ void draw_axis(){
   the display file
 */
 extern "C" G_MODULE_EXPORT void add_new_object_dialog()
-{
-  //gtk_window_present( GTK_WINDOW( new_object_dialog ) );
+{ 
   addLine(0.0, 0.0, 200.0, 400.0, "TESTE");
   addLine(300.0, -200.0, 500.0, -150.0, "BLA");
+
 } 
 
 //MAIN 
 int main (int   argc, char *argv[])
 {
+  GtkBuilder *builder;
   gtk_init (&argc, &argv);
 
-  GtkBuilder *builder;
   /* Construct a GtkBuilder instance and load our UI description */
   builder = gtk_builder_new();
   gtk_builder_add_from_file (builder, "window.glade", NULL);
 
   /* Connect signal handlers to the constructed widgets. */
-  window = GTK_WIDGET( gtk_builder_get_object( builder, "window" ) );
+  window = GTK_WIDGET( gtk_builder_get_object( builder, "main_window" ) );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( builder, "drawing_area" ) );
 
   g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
@@ -216,8 +215,7 @@ int main (int   argc, char *argv[])
 
   gtk_builder_connect_signals(builder, NULL);
   gtk_widget_show_all(window);
-
-  //g_signal_connect (window, "configure-event", G_CALLBACK (add_new_object_dialog), NULL);
+  
   
   main_window.setXMin(-1000.0);
   main_window.setYMin(-1000.0);
@@ -232,6 +230,6 @@ int main (int   argc, char *argv[])
 
   gtk_main();  
 
-  draw_axis();
+  //draw_axis();
   return 0;
 }
