@@ -32,6 +32,14 @@ GtkEntry *line_start_y_input;;
 GtkEntry *line_end_x_input;
 GtkEntry *line_end_y_input;
 
+//polygon
+GtkEntry *polygon_name_input;
+GtkEntry *polygon_x_input;
+GtkEntry *polygon_y_input;
+std::list<Point2D> polygon_point_list;
+
+
+
 //listbox
 GtkListBox *list_box;
 
@@ -44,17 +52,30 @@ View viewport;
 static void clear_surface();
 static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpointer data);
 static gboolean redraw (GtkWidget *widget, cairo_t *cr, gpointer data);
+
+//signals from GUI
 extern "C" G_MODULE_EXPORT void button_add_line_clicked();
 extern "C" G_MODULE_EXPORT void button_add_point_clicked();
+extern "C" G_MODULE_EXPORT void button_add_point_to_polygon_clicked();
+extern "C" G_MODULE_EXPORT void button_add_polygon_clicked();
 
 
 void drawNewObject(DrawableObject obj);
 void addPoint(double x, double y, std::string name);
 void addLine(double x1, double y1, double x2, double y2, std::string name);
+void addPolygon(std::list<Point2D> pointList, std::string name);
 void draw_axis();
-double getDoubleFromGtkEntry(GtkEntry * entry);
+double getDoubleFromGtkEntry(GtkEntry *entry);
+void clearGtkEntry(GtkEntry *entry);
 
-//method implementations
+void clearPointInput();
+void clearLineInput();
+void clearPolygonPointInput();
+void clearPolygonInput();
+
+
+
+// --------- method implementations ---------------
 
 /* removes all objects from the surface and clears the display_file*/
 static void clear_surface (){
@@ -97,8 +118,13 @@ double getDoubleFromGtkEntry(GtkEntry *entry)
   return atof(text);
 }
 
+void clearGtkEntry(GtkEntry *entry)
+{
+  gtk_entry_set_text (entry,"");
+}
 
 
+//draws a new object in the viewport
 void drawNewObject(DrawableObject obj)
 {
   cairo_t *cr;
@@ -127,17 +153,17 @@ void drawNewObject(DrawableObject obj)
     }
     case POLYGON:
     {
-      Point2D origin = obj.getPoints().front();
-      Point2D end = obj.getPoints().back();
+      std::list<Point2D> points = obj.getPoints();
+
+      Point2D origin = points.front();
       cairo_move_to(cr, viewport.transformX(origin.getX(), main_window), viewport.transformX(origin.getY(), main_window));
 
-      for (std::list<Point2D>::iterator it=obj.getPoints().begin(); it != obj.getPoints().end(); ++it)
-      {          
+      std::list<Point2D>::iterator it;
+      for (it= points.begin(); it != points.end(); ++it)
+      {                  
         cairo_line_to(cr, viewport.transformX(it->getX(), main_window), viewport.transformY(it->getY(), main_window));
       }    
-      cairo_line_to(cr, viewport.transformX(end.getX(), main_window), viewport.transformY(end.getY(), main_window));
-
-
+      cairo_line_to(cr, viewport.transformX(origin.getX(), main_window), viewport.transformY(origin.getY(), main_window));
       cairo_stroke(cr);
       gtk_widget_queue_draw (window);
       break;
@@ -192,10 +218,54 @@ void addLine(double x1, double y1, double x2, double y2, std::string name)
   drawNewObject(obj);
 }
 
+//adds a polygon to the surface
+void addPolygon(std::list<Point2D> pointList, std::string name )
+{
+  DrawableObject obj;
+  obj.setName(name);  
+  obj.setType(ObjectType::POLYGON);
+  obj.setPoints(pointList);
+
+  display_file.push_back(obj);
+  drawNewObject(obj);
+}
+
 void draw_axis(){ 
    addLine(0, -WINDOW_SIZE, 0, WINDOW_SIZE, "Y_AXIS"); 
    addLine(-WINDOW_SIZE,0, WINDOW_SIZE, 0, "X_AXIS"); 
 }
+
+void clearPointInput()
+{
+  clearGtkEntry(point_name_input);
+  clearGtkEntry(point_x_input);
+  clearGtkEntry(point_y_input);
+}
+
+
+void clearLineInput()
+{
+  clearGtkEntry(line_name_input);
+  clearGtkEntry(line_start_x_input);
+  clearGtkEntry(line_start_y_input);
+  clearGtkEntry(line_end_x_input);
+  clearGtkEntry(line_end_y_input);
+}
+
+
+void clearPolygonPointInput()
+{
+  clearGtkEntry(polygon_x_input);
+  clearGtkEntry(polygon_y_input);
+}
+
+void clearPolygonInput()
+{
+  clearGtkEntry(polygon_name_input);
+  clearGtkEntry(polygon_x_input);
+  clearGtkEntry(polygon_y_input);
+}
+
 
 /* Button to add a new point
 */
@@ -205,8 +275,8 @@ extern "C" G_MODULE_EXPORT void button_add_point_clicked()
   double x = getDoubleFromGtkEntry(point_x_input);
   double y = getDoubleFromGtkEntry(point_y_input);
 
-	addPoint(x, y, name); 
-
+	addPoint(x, y, name);
+  clearPointInput();
 } 
 
 
@@ -221,7 +291,32 @@ extern "C" G_MODULE_EXPORT void button_add_line_clicked()
   double y_end = getDoubleFromGtkEntry(line_end_y_input);
 
   addLine(x_start, y_start, x_end, y_end, name); 
+  clearLineInput();
 } 
+
+
+extern "C" G_MODULE_EXPORT void button_add_point_to_polygon_clicked()
+{ 
+  double x = getDoubleFromGtkEntry(polygon_x_input); 
+  double y = getDoubleFromGtkEntry(polygon_y_input); 
+
+  Point2D point;
+  point.setX(x);
+  point.setY(y);
+
+  polygon_point_list.push_back(point);
+  clearPolygonPointInput();
+}
+
+extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
+{
+  const gchar *name = gtk_entry_get_text( polygon_name_input );
+  addPolygon(polygon_point_list, name);
+
+  //removes all elements from list
+  polygon_point_list.clear();
+  clearPolygonInput();
+}
 
 
 //MAIN 
@@ -252,15 +347,14 @@ int main (int   argc, char *argv[])
   line_name_input = GTK_ENTRY( gtk_builder_get_object( builder, "line_name_input" ) );
 
 
-
+  //line init
+  polygon_name_input = GTK_ENTRY( gtk_builder_get_object( builder, "polygon_name_input" ) );
+  polygon_x_input = GTK_ENTRY( gtk_builder_get_object( builder, "polygon_x_input" ) );
+  polygon_y_input = GTK_ENTRY( gtk_builder_get_object( builder, "polygon_y_input" ) );
 
 
   g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
   g_signal_connect (drawing_area, "configure-event", G_CALLBACK (create_surface), NULL);
-
-
-
-
 
   gtk_builder_connect_signals(builder, NULL);
   gtk_widget_show_all(window);
@@ -279,6 +373,5 @@ int main (int   argc, char *argv[])
 
   gtk_main();  
 
-  //draw_axis();
   return 0;
 }
