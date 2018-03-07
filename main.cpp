@@ -54,11 +54,20 @@ static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpo
 static gboolean redraw (GtkWidget *widget, cairo_t *cr, gpointer data);
 
 //signals from GUI
+//add objects
 extern "C" G_MODULE_EXPORT void button_add_line_clicked();
 extern "C" G_MODULE_EXPORT void button_add_point_clicked();
 extern "C" G_MODULE_EXPORT void button_add_point_to_polygon_clicked();
 extern "C" G_MODULE_EXPORT void button_add_polygon_clicked();
 
+//navigate and zoom
+extern "C" G_MODULE_EXPORT void button_navigate_left_clicked();
+extern "C" G_MODULE_EXPORT void button_navigate_right_clicked();
+extern "C" G_MODULE_EXPORT void button_navigate_up_clicked();
+extern "C" G_MODULE_EXPORT void button_navigate_down_clicked();
+
+extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked();
+extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked();
 
 void drawNewObject(DrawableObject obj);
 void addPoint(double x, double y, std::string name);
@@ -317,6 +326,41 @@ extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
   polygon_point_list.clear();
   clearPolygonInput();
 }
+
+
+
+extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
+{
+
+}
+
+extern "C" G_MODULE_EXPORT void button_navigate_right_clicked()
+{
+
+}
+
+extern "C" G_MODULE_EXPORT void button_navigate_up_clicked()
+{
+
+}
+
+extern "C" G_MODULE_EXPORT void button_navigate_down_clicked()
+{
+
+}
+
+extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked()
+{
+
+}
+
+extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked()
+{
+
+}
+
+
+
 
 
 //MAIN 
