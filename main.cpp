@@ -9,6 +9,7 @@
 
 #define WINDOW_SIZE 200.0
 #define VIEWPORT_SIZE 250.0
+#define NAVIGATE_SCALE 100.0
 
 
 static cairo_surface_t *surface = NULL;
@@ -331,6 +332,18 @@ extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
 
 extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
 {
+  main_window.setXMax(main_window.getXMax() + NAVIGATE_SCALE);
+  main_window.setXMin(main_window.getXMin() + NAVIGATE_SCALE);
+  clear_surface();
+
+   std::list<DrawableObject>::iterator it;
+      for (it= display_file.begin(); it != display_file.end(); ++it)
+      {                  
+        //cairo_line_to(cr, viewport.transformX(it->getX(), main_window), viewport.transformY(it->getY(), main_window));
+        drawNewObject(*it);
+      }   
+
+
 
 }
 
