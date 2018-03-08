@@ -10,6 +10,7 @@
 #define WINDOW_SIZE 200.0
 #define VIEWPORT_SIZE 250.0
 #define NAVIGATE_SCALE 50.0
+#define ZOOM_FACTOR 1.2
 
 
 static cairo_surface_t *surface = NULL;
@@ -375,12 +376,21 @@ extern "C" G_MODULE_EXPORT void button_navigate_down_clicked()
 
 extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked()
 {
+  main_window.setXMax(main_window.getXMax() / ZOOM_FACTOR);
+  main_window.setXMin(main_window.getXMin() / ZOOM_FACTOR);
+  main_window.setYMax(main_window.getYMax() / ZOOM_FACTOR);
+  main_window.setYMin(main_window.getYMin() / ZOOM_FACTOR);
+  clearAndRedraw();
 
 }
 
 extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked()
 {
-
+  main_window.setXMax(main_window.getXMax() * ZOOM_FACTOR);
+  main_window.setXMin(main_window.getXMin() * ZOOM_FACTOR);
+  main_window.setYMax(main_window.getYMax() * ZOOM_FACTOR);
+  main_window.setYMin(main_window.getYMin() * ZOOM_FACTOR);
+  clearAndRedraw();
 }
 
 
