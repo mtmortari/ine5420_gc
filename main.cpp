@@ -9,7 +9,7 @@
 
 #define WINDOW_SIZE 200.0
 #define VIEWPORT_SIZE 250.0
-#define NAVIGATE_SCALE 100.0
+#define NAVIGATE_SCALE 50.0
 
 
 static cairo_surface_t *surface = NULL;
@@ -71,6 +71,7 @@ extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked();
 extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked();
 
 void drawNewObject(DrawableObject obj);
+void clearAndRedraw();
 void addPoint(double x, double y, std::string name);
 void addLine(double x1, double y1, double x2, double y2, std::string name);
 void addPolygon(std::list<Point2D> pointList, std::string name);
@@ -276,6 +277,17 @@ void clearPolygonInput()
   clearGtkEntry(polygon_y_input);
 }
 
+void clearAndRedraw()
+{
+  clear_surface();
+  
+  std::list<DrawableObject>::iterator it;
+  for (it= display_file.begin(); it != display_file.end(); ++it)
+  {                  
+    drawNewObject(*it);
+  }   
+}
+
 
 /* Button to add a new point
 */
@@ -332,33 +344,32 @@ extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
 
 extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
 {
-  main_window.setXMax(main_window.getXMax() + NAVIGATE_SCALE);
-  main_window.setXMin(main_window.getXMin() + NAVIGATE_SCALE);
-  clear_surface();
-
-   std::list<DrawableObject>::iterator it;
-      for (it= display_file.begin(); it != display_file.end(); ++it)
-      {                  
-        //cairo_line_to(cr, viewport.transformX(it->getX(), main_window), viewport.transformY(it->getY(), main_window));
-        drawNewObject(*it);
-      }   
-
-
-
+  main_window.setXMax(main_window.getXMax() - NAVIGATE_SCALE);
+  main_window.setXMin(main_window.getXMin() - NAVIGATE_SCALE);
+  clearAndRedraw();
 }
 
 extern "C" G_MODULE_EXPORT void button_navigate_right_clicked()
 {
+  main_window.setXMax(main_window.getXMax() + NAVIGATE_SCALE);
+  main_window.setXMin(main_window.getXMin() + NAVIGATE_SCALE);
+  clearAndRedraw();
 
 }
 
 extern "C" G_MODULE_EXPORT void button_navigate_up_clicked()
 {
+  main_window.setYMax(main_window.getYMax() + NAVIGATE_SCALE);
+  main_window.setYMin(main_window.getYMin() + NAVIGATE_SCALE);
+  clearAndRedraw();
 
 }
 
 extern "C" G_MODULE_EXPORT void button_navigate_down_clicked()
 {
+  main_window.setYMax(main_window.getYMax() - NAVIGATE_SCALE);
+  main_window.setYMin(main_window.getYMin() - NAVIGATE_SCALE);
+  clearAndRedraw();
 
 }
 
