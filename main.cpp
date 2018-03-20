@@ -5,6 +5,7 @@
 #include "DrawableObject.h"
 #include "ObjectType.cpp"
 #include "View.h"
+#include "Matrix2D.h"
 
 
 #define WINDOW_SIZE 200.0
