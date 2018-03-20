@@ -20,12 +20,12 @@ ObjectType DrawableObject::geType()
 	return type;
 }
 
-void DrawableObject::setPoints(std::list<Point2D> points)
+void DrawableObject::setPoints(std::list<Point3D> points)
 {
 	this->points = points;
 }
 
-std::list<Point2D> DrawableObject::getPoints()
+std::list<Point3D> DrawableObject::getPoints()
 {
 	return points;
 }

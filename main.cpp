@@ -1,11 +1,11 @@
 #include <gtk/gtk.h>
 #include <list>
 #include <vector>
-#include "Point2D.h"
+#include "Point3D.h"
 #include "DrawableObject.h"
 #include "ObjectType.cpp"
 #include "View.h"
-#include "Matrix2D.h"
+#include "Matrix3D.h"
 
 
 #define WINDOW_SIZE 200.0
@@ -39,7 +39,7 @@ GtkEntry *line_end_y_input;
 GtkEntry *polygon_name_input;
 GtkEntry *polygon_x_input;
 GtkEntry *polygon_y_input;
-std::list<Point2D> polygon_point_list;
+std::list<Point3D> polygon_point_list;
 
 
 
@@ -76,7 +76,7 @@ void drawNewObject(DrawableObject obj);
 void clearAndRedraw();
 void addPoint(double x, double y, std::string name);
 void addLine(double x1, double y1, double x2, double y2, std::string name);
-void addPolygon(std::list<Point2D> pointList, std::string name);
+void addPolygon(std::list<Point3D> pointList, std::string name);
 void draw_axis();
 double getDoubleFromGtkEntry(GtkEntry *entry);
 void clearGtkEntry(GtkEntry *entry);
@@ -147,7 +147,7 @@ void drawNewObject(DrawableObject obj)
   {
     case POINT:
     {
-      Point2D point = obj.getPoints().back();
+      Point3D point = obj.getPoints().back();
       cairo_move_to(cr, viewport.transformX(point.getX(), main_window), viewport.transformY(point.getY(), main_window));
       cairo_line_to(cr, viewport.transformX(point.getX(), main_window), viewport.transformY(point.getY(), main_window));
       cairo_stroke(cr);
@@ -156,8 +156,8 @@ void drawNewObject(DrawableObject obj)
     }
     case LINE:
     {
-      Point2D origin = obj.getPoints().front();
-      Point2D end = obj.getPoints().back();
+      Point3D origin = obj.getPoints().front();
+      Point3D end = obj.getPoints().back();
       cairo_move_to(cr, viewport.transformX(origin.getX(), main_window), viewport.transformY(origin.getY(), main_window));
       cairo_line_to(cr, viewport.transformX(end.getX(), main_window), viewport.transformY(end.getY(), main_window));
       cairo_stroke(cr);
@@ -166,12 +166,12 @@ void drawNewObject(DrawableObject obj)
     }
     case POLYGON:
     {
-      std::list<Point2D> points = obj.getPoints();
+      std::list<Point3D> points = obj.getPoints();
 
-      Point2D origin = points.front();
+      Point3D origin = points.front();
       cairo_move_to(cr, viewport.transformX(origin.getX(), main_window), viewport.transformX(origin.getY(), main_window));
 
-      std::list<Point2D>::iterator it;
+      std::list<Point3D>::iterator it;
       for (it= points.begin(); it != points.end(); ++it)
       {                  
         cairo_line_to(cr, viewport.transformX(it->getX(), main_window), viewport.transformY(it->getY(), main_window));
@@ -191,11 +191,12 @@ void drawNewObject(DrawableObject obj)
 //adds a point to the surface
 void addPoint(double x, double y, std::string name)
 {
-  Point2D point;
+  Point3D point;
   point.setX(x);
   point.setY(y);  
+  point.setZ(1.0);  
 
-  std::list<Point2D> pointList;  
+  std::list<Point3D> pointList;  
   pointList.push_front(point);
 
   DrawableObject obj;
@@ -210,15 +211,17 @@ void addPoint(double x, double y, std::string name)
 //adds a line to the surface
 void addLine(double x1, double y1, double x2, double y2, std::string name)
 {
-  Point2D point1;
+  Point3D point1;
   point1.setX(x1);
   point1.setY(y1);    
+  point1.setZ(1.0);  
 
-  Point2D point2;
+  Point3D point2;
   point2.setX(x2);
   point2.setY(y2);    
+  point2.setZ(1.0);  
 
-  std::list<Point2D> pointList;  
+  std::list<Point3D> pointList;  
   pointList.push_back(point1);
   pointList.push_back(point2);
 
@@ -232,7 +235,7 @@ void addLine(double x1, double y1, double x2, double y2, std::string name)
 }
 
 //adds a polygon to the surface
-void addPolygon(std::list<Point2D> pointList, std::string name )
+void addPolygon(std::list<Point3D> pointList, std::string name )
 {
   DrawableObject obj;
   obj.setName(name);  
@@ -324,9 +327,10 @@ extern "C" G_MODULE_EXPORT void button_add_point_to_polygon_clicked()
   double x = getDoubleFromGtkEntry(polygon_x_input); 
   double y = getDoubleFromGtkEntry(polygon_y_input); 
 
-  Point2D point;
+  Point3D point;
   point.setX(x);
   point.setY(y);
+  point.setZ(1.0);  
 
   polygon_point_list.push_back(point);
   clearPolygonPointInput();
