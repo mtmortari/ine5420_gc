@@ -12,10 +12,80 @@ Matrix3DStruct Matrix3D::getMatrix()
 }
 
 
-Point3D Matrix3D::translation(Point3D point)
+Matrix3D Matrix3D::scalarProduct(double value)
 {
-	Point3D newPoint;
-	newPoint.setX(point.getX() + this->matrix.matrix[2][0]);
-	newPoint.setY(point.getX() + this->matrix.matrix[2][1]);
-	newPoint.setZ(1);	
+	Matrix3DStruct newMatrix;
+
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)	
+		{
+			newMatrix.matrix[i][j] = value * this->matrix.matrix[i][j];
+		}
+	}
+
+	Matrix3D newMatrix3D;
+	newMatrix3D.setMatrix(newMatrix);
+	return newMatrix3D;
+}
+
+Matrix3D Matrix3D::operator+(Matrix3D other)
+{
+	Matrix3DStruct newMatrix;
+
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)	
+		{
+			newMatrix.matrix[i][j] = this->matrix.matrix[i][j] + other.getMatrix().matrix[i][j];
+		}
+	}
+
+	Matrix3D newMatrix3D;
+	newMatrix3D.setMatrix(newMatrix);
+	return newMatrix3D;
+}
+
+
+Matrix3D Matrix3D::operator-(Matrix3D other)
+{
+
+	Matrix3DStruct newMatrix;
+
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)	
+		{
+			newMatrix.matrix[i][j] = this->matrix.matrix[i][j] - other.getMatrix().matrix[i][j];
+		}
+	}
+
+	Matrix3D newMatrix3D;
+	newMatrix3D.setMatrix(newMatrix);
+	return newMatrix3D;
+}
+
+Matrix3D Matrix3D::operator*(Matrix3D other)
+{
+	Matrix3DStruct newMatrix;
+
+
+	// newMatrix = this * other
+	for(int i = 0; i<=3; i++)
+	{
+		for(int j = 0; j <= 3; j++)
+		{
+			double soma = 0;
+			for(int k = 0; k <=3 ; k++)
+			{
+				soma += this->matrix.matrix[i][k] * other.getMatrix().matrix[k][j];
+				
+			} 
+			newMatrix.matrix[i][j] = soma;	
+		}
+	}
+
+	Matrix3D newMatrix3D;
+	newMatrix3D.setMatrix(newMatrix);
+	return newMatrix3D;
 }

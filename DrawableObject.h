@@ -23,6 +23,7 @@ class DrawableObject{
 		ObjectType geType();
 		void setPoints(std::list<Point3D> points);
 		std::list<Point3D> getPoints();
+		Point3D calcGeometricCenter();
 };
 
 #endif

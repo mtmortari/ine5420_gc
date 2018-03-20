@@ -2,7 +2,7 @@
  represents a 3x3 matrix for 2D calculations
 */
 
-#include "Point3D.h"
+
 #include "Matrix3DStruct.cpp"
 
 #ifndef MARTIX3D_H
@@ -16,7 +16,10 @@ class Matrix3D{
 		void setMatrix(Matrix3DStruct);
 		Matrix3DStruct getMatrix();
 
-		Point3D translation(Point3D point);
+		Matrix3D scalarProduct(double value);
+		Matrix3D operator+(Matrix3D other);
+		Matrix3D operator-(Matrix3D other);
+		Matrix3D operator*(Matrix3D other);  //matrix multiplication
 
 
 };

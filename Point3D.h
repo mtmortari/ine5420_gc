@@ -2,6 +2,8 @@
  represents a 3D point
 */
 
+#include "Matrix3D.h"
+
 #ifndef POINT3D_H
 #define POINT3D_H
 
@@ -16,6 +18,9 @@ class Point3D{
 		double getX();
 		double getY();
 		double getZ();
+
+		//multiplies the point with matrix
+		Point3D operator*(Matrix3D matrix);
 };
 
 #endif

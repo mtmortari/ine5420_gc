@@ -30,3 +30,24 @@ double Point3D::getZ()
 {
 	return z;
 }
+
+
+Point3D Point3D::operator*(Matrix3D matrix)
+{
+	
+	double p[3] = {this->x, this-> y, this->z};
+	double c[3] = {0, 0,0};
+	// C = A * B	
+	for(int j = 0; j <= 3; j++)
+	{		
+		for(int k = 0; k <=3 ; k++)
+		{
+			c[j] += p[j] * matrix.getMatrix().matrix[k][j];			
+		} 		
+	}
+
+	Point3D point;
+	point.setX(c[0]);
+	point.setY(c[1]);
+	point.setZ(c[2]);
+}

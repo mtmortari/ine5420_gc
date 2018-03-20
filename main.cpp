@@ -1,11 +1,9 @@
 #include <gtk/gtk.h>
 #include <list>
 #include <vector>
-#include "Point3D.h"
 #include "DrawableObject.h"
 #include "ObjectType.cpp"
 #include "View.h"
-#include "Matrix3D.h"
 
 
 #define WINDOW_SIZE 200.0
@@ -168,8 +166,7 @@ void drawNewObject(DrawableObject obj)
     {
       std::list<Point3D> points = obj.getPoints();
 
-      Point3D origin = points.front();
-      cairo_move_to(cr, viewport.transformX(origin.getX(), main_window), viewport.transformX(origin.getY(), main_window));
+      Point3D origin = points.front();   
 
       std::list<Point3D>::iterator it;
       for (it= points.begin(); it != points.end(); ++it)
