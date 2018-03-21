@@ -6,6 +6,7 @@
 #include <string>
 #include "ObjectType.cpp"
 #include "Point3D.h"
+#include "MatrixUtils.h"
 
 #ifndef DRAWABLEOBJECT_H
 #define DRAWABLEOBJECT_H
@@ -24,6 +25,8 @@ class DrawableObject{
 		void setPoints(std::list<Point3D> points);
 		std::list<Point3D> getPoints();
 		Point3D calcGeometricCenter();
+
+		void rotate(double angle);
 };
 
 #endif

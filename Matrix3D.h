@@ -1,11 +1,11 @@
 /*
- represents a 3x3 matrix for 2D calculations
+ represents a 3x3 matrix for 3D calculations
 */
 
 
 #include "Matrix3DStruct.cpp"
 
-#ifndef MARTIX3D_H
+#ifndef MATRIX3D_H
 #define MATRIX3D_H
 
 class Matrix3D{

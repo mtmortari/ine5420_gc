@@ -50,3 +50,28 @@ Point3D DrawableObject::calcGeometricCenter()
 
     return point;
 }
+
+
+
+void DrawableObject::rotate(double angle)
+{
+	MatrixUtils utils;
+	Point3D center = this->calcGeometricCenter();
+
+	Matrix3D translateToOrigin = utils.createTranslationMatrix(center);
+	Matrix3D rotateAroundOrigin = utils.createRotationMatrix(angle);
+	center.scalarProduct(-1.0);
+	Matrix3D translateBack = utils.createTranslationMatrix(center);
+
+	Matrix3D result = (translateToOrigin * rotateAroundOrigin) * translateBack;
+
+	std::list<Point3D>::iterator it;
+    for (it= points.begin(); it != points.end(); ++it)
+    {        
+    	Point3D point = it->multiply(result);
+     	it->setX(point.getX());
+     	it->setY(point.getY());
+     	it->setZ(point.getZ());
+    }    
+
+}

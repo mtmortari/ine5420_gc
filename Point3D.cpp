@@ -32,7 +32,7 @@ double Point3D::getZ()
 }
 
 
-Point3D Point3D::operator*(Matrix3D matrix)
+Point3D Point3D::multiply(Matrix3D matrix)
 {
 	
 	double p[3] = {this->x, this-> y, this->z};
@@ -50,4 +50,11 @@ Point3D Point3D::operator*(Matrix3D matrix)
 	point.setX(c[0]);
 	point.setY(c[1]);
 	point.setZ(c[2]);
+}
+
+void Point3D::scalarProduct(double value)
+{
+	this->x = this->x * value;
+	this->y = this->y * value;
+	this->y = this->y * value;
 }

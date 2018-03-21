@@ -39,6 +39,11 @@ GtkEntry *polygon_x_input;
 GtkEntry *polygon_y_input;
 std::list<Point3D> polygon_point_list;
 
+//actions
+GtkEntry *rotate_angle_input;
+
+
+
 
 
 //listbox
@@ -69,6 +74,8 @@ extern "C" G_MODULE_EXPORT void button_navigate_down_clicked();
 
 extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked();
 extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked();
+
+extern "C" G_MODULE_EXPORT void rotate_angle_button_clicked();
 
 void drawNewObject(DrawableObject obj);
 void clearAndRedraw();
@@ -396,6 +403,18 @@ extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked()
 }
 
 
+extern "C" G_MODULE_EXPORT void rotate_angle_button_clicked()
+{
+  double angle = getDoubleFromGtkEntry(rotate_angle_input); 
+
+  std::list<DrawableObject>::iterator it;
+  for (it= display_file.begin(); it != display_file.end(); ++it)
+  {                  
+    it->rotate(angle);
+  }   
+
+   clearAndRedraw();
+}
 
 
 
@@ -431,6 +450,10 @@ int main (int   argc, char *argv[])
   polygon_name_input = GTK_ENTRY( gtk_builder_get_object( builder, "polygon_name_input" ) );
   polygon_x_input = GTK_ENTRY( gtk_builder_get_object( builder, "polygon_x_input" ) );
   polygon_y_input = GTK_ENTRY( gtk_builder_get_object( builder, "polygon_y_input" ) );
+
+
+  //actions
+  rotate_angle_input  = GTK_ENTRY( gtk_builder_get_object( builder, "rotate_angle_input" ) );
 
 
   g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);

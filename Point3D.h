@@ -20,7 +20,9 @@ class Point3D{
 		double getZ();
 
 		//multiplies the point with matrix
-		Point3D operator*(Matrix3D matrix);
+		Point3D multiply(Matrix3D matrix);
+
+		void scalarProduct(double value);
 };
 
 #endif
