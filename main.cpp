@@ -142,7 +142,7 @@ void clearGtkEntry(GtkEntry *entry)
 }
 
 
-//draws a new object in the viewport
+//draws a new object in the viewport asdasdas
 void drawNewObject(DrawableObject obj)
 {
   cairo_t *cr;
