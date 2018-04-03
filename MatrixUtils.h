@@ -11,8 +11,8 @@
 
 class MatrixUtils{
 	public:		
-		static Matrix3D createRotationMatrix(double angle);
-		static Matrix3D createTranslationMatrix(Point3D point);
+		Matrix3D createRotationMatrix(double angle);
+		Matrix3D createTranslationMatrix(Point3D point);
 
 };
 

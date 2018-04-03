@@ -6,9 +6,8 @@
 #include "ObjectType.cpp"
 #include "View.h"
 
-
-
-//  #define NAVIGATE_SCALE 50.0
+#define WINDOW_SIZE 200.0
+#define ZOOM_FACTOR 1.2
 
 
 static cairo_surface_t *surface = NULL;
@@ -74,6 +73,12 @@ extern "C" G_MODULE_EXPORT void button_cancel();
 
 //navigate and zoom
 extern "C" G_MODULE_EXPORT void button_navigate_left_clicked();
+extern "C" G_MODULE_EXPORT void button_navigate_right_clicked();
+extern "C" G_MODULE_EXPORT void button_navigate_up_clicked();
+extern "C" G_MODULE_EXPORT void button_navigate_down_clicked();
+
+extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked();
+extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked();
 
 
 void drawNewObject(DrawableObject obj);
@@ -326,9 +331,7 @@ void clearAndRedraw()
   polygon_x_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_x_polygon" ) );
   polygon_y_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_y_polygon" ) );
 
-  //actions
-  passo_input  = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_passo" ) );
-
+  
   //g_signal_connect (second_window, "focus-tab", G_CALLBACK (currentTab), NULL);
 
   gtk_builder_connect_signals(gtkBuilder, NULL);
@@ -403,12 +406,62 @@ extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
   gtk_widget_destroy(GTK_WIDGET(second_window));
 }
 
+
+//  double navigate_left = getDoubleFromGtkEntry(passo_input); 
+
+
+
 extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
 {
+  double navigate = getDoubleFromGtkEntry(passo_input); 
+  main_window.setXMax(main_window.getXMax() - navigate);
+  main_window.setXMin(main_window.getXMin() - navigate);
+  clearAndRedraw();
+}
 
-  double navigate_left = getDoubleFromGtkEntry(passo_input); 
-  main_window.setXMax(main_window.getXMax() - navigate_left);
-  main_window.setXMin(main_window.getXMin() - navigate_left);
+extern "C" G_MODULE_EXPORT void button_navigate_right_clicked()
+{
+  double navigate = getDoubleFromGtkEntry(passo_input); 
+  main_window.setXMax(main_window.getXMax() + navigate);
+  main_window.setXMin(main_window.getXMin() + navigate);
+  clearAndRedraw();
+
+}
+
+extern "C" G_MODULE_EXPORT void button_navigate_up_clicked()
+{
+  double navigate = getDoubleFromGtkEntry(passo_input); 
+  main_window.setYMax(main_window.getYMax() + navigate);
+  main_window.setYMin(main_window.getYMin() + navigate);
+  clearAndRedraw();
+
+}
+
+extern "C" G_MODULE_EXPORT void button_navigate_down_clicked()
+{
+  double navigate = getDoubleFromGtkEntry(passo_input); 
+  main_window.setYMax(main_window.getYMax() - navigate);
+  main_window.setYMin(main_window.getYMin() - navigate);
+  clearAndRedraw();
+
+}
+
+extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked()
+{
+  main_window.setXMax(main_window.getXMax() / ZOOM_FACTOR);
+  main_window.setXMin(main_window.getXMin() / ZOOM_FACTOR);
+  main_window.setYMax(main_window.getYMax() / ZOOM_FACTOR);
+  main_window.setYMin(main_window.getYMin() / ZOOM_FACTOR);
+  clearAndRedraw();
+
+}
+
+extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked()
+{
+  main_window.setXMax(main_window.getXMax() * ZOOM_FACTOR);
+  main_window.setXMin(main_window.getXMin() * ZOOM_FACTOR);
+  main_window.setYMax(main_window.getYMax() * ZOOM_FACTOR);
+  main_window.setYMin(main_window.getYMin() * ZOOM_FACTOR);
   clearAndRedraw();
 }
 
@@ -430,10 +483,11 @@ extern "C" G_MODULE_EXPORT void button_cancel()
 
 int main(int argc, char *argv[])
 {
-  main_window.setXMin(0);
-  main_window.setXMax(400);
-  main_window.setYMin(0);
-  main_window.setYMax(400);
+  main_window.setXMin(-WINDOW_SIZE);
+  main_window.setXMax(WINDOW_SIZE);
+  main_window.setYMin(-WINDOW_SIZE);
+  main_window.setYMax(WINDOW_SIZE);
+
 
   //inicialização da tela principal
   GtkBuilder  *builder;
@@ -446,10 +500,16 @@ int main(int argc, char *argv[])
   //todos os objetos do arquivo window.glade que precisamos pegar dados ou alterar dados deles
   window = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "main_window") );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "drawing_area") );
+
+
+  passo_input = GTK_ENTRY( gtk_builder_get_object( builder, "passo_input" ) );
+
   combo_box = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "combo") );
   combo_box = gtk_combo_box_text_new();
   gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), NULL, "Don't install.");
   gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 1);
+
+
 
 
   //list_store = gtk_list_store_new( 1, G_TYPE_STRING );

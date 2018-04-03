@@ -4,6 +4,7 @@
 
 #include <list>
 #include <string>
+#include <iostream>
 #include "ObjectType.cpp"
 #include "Point3D.h"
 #include "MatrixUtils.h"
