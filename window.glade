@@ -3,8 +3,8 @@
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <object class="GtkWindow" id="main_window">
-    <property name="width_request">600</property>
-    <property name="height_request">450</property>
+    <property name="width_request">760</property>
+    <property name="height_request">520</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Computação Gráfica</property>
@@ -15,7 +15,7 @@
       <object class="GtkPaned" id="paned1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <property name="position">200</property>
+        <property name="position">249</property>
         <property name="position_set">True</property>
         <child>
           <object class="GtkBox" id="box1">
@@ -60,7 +60,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkComboBoxText" id="combo">
+                                  <object class="GtkListBox" id="lista_objetos">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                   </object>
@@ -112,14 +112,17 @@
                                         <property name="height_request">21</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Passo:</property>
+                                        <property name="label" translatable="yes">Passo da
+navegação:</property>
+                                        <property name="lines">1</property>
                                       </object>
                                       <packing>
-                                        <property name="y">18</property>
+                                        <property name="x">24</property>
+                                        <property name="y">9</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkEntry" id="passo_input">
+                                      <object class="GtkEntry" id="passo_input_navegation">
                                         <property name="width_request">57</property>
                                         <property name="height_request">17</property>
                                         <property name="visible">True</property>
@@ -128,8 +131,8 @@
                                         <property name="width_chars">0</property>
                                       </object>
                                       <packing>
-                                        <property name="x">57</property>
-                                        <property name="y">12</property>
+                                        <property name="x">31</property>
+                                        <property name="y">55</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -144,7 +147,7 @@
                                       </object>
                                       <packing>
                                         <property name="x">36</property>
-                                        <property name="y">65</property>
+                                        <property name="y">96</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -159,7 +162,7 @@
                                       </object>
                                       <packing>
                                         <property name="x">36</property>
-                                        <property name="y">132</property>
+                                        <property name="y">165</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -173,7 +176,7 @@
                                         <signal name="clicked" handler="button_navigate_left_clicked" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="y">98</property>
+                                        <property name="y">130</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -189,12 +192,12 @@
                                       </object>
                                       <packing>
                                         <property name="x">73</property>
-                                        <property name="y">98</property>
+                                        <property name="y">130</property>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="zoom_plus_button">
-                                        <property name="label" translatable="yes">+</property>
+                                        <property name="label" translatable="yes">In</property>
                                         <property name="width_request">30</property>
                                         <property name="height_request">30</property>
                                         <property name="visible">True</property>
@@ -205,23 +208,52 @@
                                         <signal name="clicked" handler="button_zoom_plus_clicked" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="x">158</property>
-                                        <property name="y">75</property>
+                                        <property name="x">171</property>
+                                        <property name="y">101</property>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="zoom_button_minus">
-                                        <property name="label" translatable="yes">-</property>
+                                        <property name="label" translatable="yes">Out</property>
                                         <property name="width_request">30</property>
-                                        <property name="height_request">30</property>
+                                        <property name="height_request">26</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
                                         <signal name="clicked" handler="button_zoom_minus_clicked" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="x">158</property>
-                                        <property name="y">120</property>
+                                        <property name="x">165</property>
+                                        <property name="y">159</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="label3">
+                                        <property name="width_request">81</property>
+                                        <property name="height_request">56</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Passo do
+zoom:</property>
+                                        <property name="lines">1</property>
+                                      </object>
+                                      <packing>
+                                        <property name="x">149</property>
+                                        <property name="y">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkEntry" id="passo_input_zoom">
+                                        <property name="width_request">59</property>
+                                        <property name="height_request">21</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="max_length">16</property>
+                                        <property name="width_chars">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="x">160</property>
+                                        <property name="y">55</property>
                                       </packing>
                                     </child>
                                   </object>

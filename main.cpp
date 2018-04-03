@@ -7,7 +7,7 @@
 #include "View.h"
 
 #define WINDOW_SIZE 200.0
-#define ZOOM_FACTOR 1.2
+//#define ZOOM_FACTOR 1.2
 
 
 static cairo_surface_t *surface = NULL;
@@ -50,7 +50,8 @@ GtkEntry *polygon_y_input;
 std::list<Point3D> polygon_point_list;
 
 //actions
-GtkEntry *passo_input;
+GtkEntry *passo_input_navegation;
+GtkEntry *passo_input_zoom;
 
 View main_window;
 View viewport;
@@ -406,62 +407,64 @@ extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
   gtk_widget_destroy(GTK_WIDGET(second_window));
 }
 
-
-//  double navigate_left = getDoubleFromGtkEntry(passo_input); 
-
-
-
+/* Button to left navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
   main_window.setXMax(main_window.getXMax() - navigate);
   main_window.setXMin(main_window.getXMin() - navigate);
   clearAndRedraw();
 }
-
+/* Button to right navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_right_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
   main_window.setXMax(main_window.getXMax() + navigate);
   main_window.setXMin(main_window.getXMin() + navigate);
   clearAndRedraw();
 
 }
-
+/* Button to up navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_up_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
   main_window.setYMax(main_window.getYMax() + navigate);
   main_window.setYMin(main_window.getYMin() + navigate);
   clearAndRedraw();
 
 }
 
+/* Button to down navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_down_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
   main_window.setYMax(main_window.getYMax() - navigate);
   main_window.setYMin(main_window.getYMin() - navigate);
   clearAndRedraw();
 
+
 }
 
+/* Button to zoom in the window */ 
 extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked()
 {
-  main_window.setXMax(main_window.getXMax() / ZOOM_FACTOR);
-  main_window.setXMin(main_window.getXMin() / ZOOM_FACTOR);
-  main_window.setYMax(main_window.getYMax() / ZOOM_FACTOR);
-  main_window.setYMin(main_window.getYMin() / ZOOM_FACTOR);
+  double zoom = getDoubleFromGtkEntry(passo_input_zoom); 
+  main_window.setXMax(main_window.getXMax() / zoom);
+  main_window.setXMin(main_window.getXMin() / zoom);
+  main_window.setYMax(main_window.getYMax() / zoom);
+  main_window.setYMin(main_window.getYMin() / zoom);
   clearAndRedraw();
 
 }
 
+/* Button to zoom out the window */ 
 extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked()
 {
-  main_window.setXMax(main_window.getXMax() * ZOOM_FACTOR);
-  main_window.setXMin(main_window.getXMin() * ZOOM_FACTOR);
-  main_window.setYMax(main_window.getYMax() * ZOOM_FACTOR);
-  main_window.setYMin(main_window.getYMin() * ZOOM_FACTOR);
+  double zoom = getDoubleFromGtkEntry(passo_input_zoom); 
+  main_window.setXMax(main_window.getXMax() * zoom);
+  main_window.setXMin(main_window.getXMin() * zoom);
+  main_window.setYMax(main_window.getYMax() * zoom);
+  main_window.setYMin(main_window.getYMin() * zoom);
   clearAndRedraw();
 }
 
@@ -502,7 +505,8 @@ int main(int argc, char *argv[])
   drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "drawing_area") );
 
 
-  passo_input = GTK_ENTRY( gtk_builder_get_object( builder, "passo_input" ) );
+  passo_input_navegation = GTK_ENTRY( gtk_builder_get_object( builder, "passo_input_navegation" ) );
+  passo_input_zoom = GTK_ENTRY( gtk_builder_get_object( builder, "passo_input_zoom" ) );
 
   combo_box = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "combo") );
   combo_box = gtk_combo_box_text_new();
