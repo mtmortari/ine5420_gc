@@ -8,9 +8,9 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Computação Gráfica</property>
+    <property name="window_position">center</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
-    <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkPaned" id="paned1">
         <property name="visible">True</property>
@@ -84,7 +84,7 @@
                     <child>
                       <object class="GtkBox" id="box3">
                         <property name="width_request">0</property>
-                        <property name="height_request">260</property>
+                        <property name="height_request">334</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_bottom">2</property>
@@ -92,11 +92,12 @@
                         <child>
                           <object class="GtkFrame" id="frame2">
                             <property name="width_request">200</property>
-                            <property name="height_request">260</property>
+                            <property name="height_request">258</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label_xalign">0</property>
-                            <property name="shadow_type">none</property>
+                            <property name="label_xalign">0.070000000298023224</property>
+                            <property name="label_yalign">0.69999998807907104</property>
+                            <property name="shadow_type">in</property>
                             <child>
                               <object class="GtkAlignment" id="alignment2">
                                 <property name="visible">True</property>
@@ -122,7 +123,7 @@ navegação:</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkEntry" id="passo_input_navegation">
+                                      <object class="GtkEntry" id="passo_input_navigation">
                                         <property name="width_request">57</property>
                                         <property name="height_request">17</property>
                                         <property name="visible">True</property>
@@ -162,7 +163,7 @@ navegação:</property>
                                       </object>
                                       <packing>
                                         <property name="x">36</property>
-                                        <property name="y">165</property>
+                                        <property name="y">162</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -176,7 +177,7 @@ navegação:</property>
                                         <signal name="clicked" handler="button_navigate_left_clicked" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="y">130</property>
+                                        <property name="y">129</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -192,7 +193,7 @@ navegação:</property>
                                       </object>
                                       <packing>
                                         <property name="x">73</property>
-                                        <property name="y">130</property>
+                                        <property name="y">129</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -256,6 +257,82 @@ zoom:</property>
                                         <property name="y">55</property>
                                       </packing>
                                     </child>
+                                    <child>
+                                      <object class="GtkFrame" id="frame3">
+                                        <property name="width_request">193</property>
+                                        <property name="height_request">107</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="opacity">0.90000000000000002</property>
+                                        <property name="label_xalign">0</property>
+                                        <property name="shadow_type">in</property>
+                                        <child>
+                                          <object class="GtkAlignment" id="alignment3">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="left_padding">12</property>
+                                            <child>
+                                              <object class="GtkFixed" id="fixed2">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <child>
+                                                  <object class="GtkEntry" id="rotate_angle_input">
+                                                    <property name="width_request">4</property>
+                                                    <property name="height_request">6</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="width_chars">7</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="x">57</property>
+                                                    <property name="y">8</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="label5">
+                                                    <property name="width_request">44</property>
+                                                    <property name="height_request">24</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="label" translatable="yes">Graus</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="x">11</property>
+                                                    <property name="y">12</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkButton" id="button1">
+                                                    <property name="label" translatable="yes">Rotacionar</property>
+                                                    <property name="width_request">66</property>
+                                                    <property name="height_request">-1</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="receives_default">True</property>
+                                                    <signal name="clicked" handler="rotate_angle_button_clicked" swapped="no"/>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="x">36</property>
+                                                    <property name="y">49</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child type="label">
+                                          <object class="GtkLabel" id="label4">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Rotação dos objetos</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="x">19</property>
+                                        <property name="y">210</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -286,21 +363,6 @@ zoom:</property>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow2">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">25</property>
                   </packing>
                 </child>
               </object>

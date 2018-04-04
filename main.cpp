@@ -26,10 +26,7 @@ GtkBuilder *gtkBuilder;
 GtkWidget *second_window;
 
 //listbox
-//GtkListStore *list_store;
-GtkWidget *combo_box;
-//tkTreeIter iter;
-
+//GtkWidget *list_box;
 
 //point
 GtkEntry *point_x_input;
@@ -50,8 +47,9 @@ GtkEntry *polygon_y_input;
 std::list<Point3D> polygon_point_list;
 
 //actions
-GtkEntry *passo_input_navegation;
+GtkEntry *passo_input_navigation;
 GtkEntry *passo_input_zoom;
+GtkEntry *rotate_angle_input;
 
 View main_window;
 View viewport;
@@ -60,9 +58,8 @@ View viewport;
 static void clear_surface ();
 static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpointer data);
 static gboolean redraw (GtkWidget *widget, cairo_t *cr, gpointer data);
-void gtk_combo_box_text_append_text (GtkComboBoxText *combo_box, const gchar *text);
 
-//static gboolean currentTab (GtkNotebook *notebook, GtkNotebookTab arg1, gpointer data);
+//void gtk_combo_box_text_append_text (GtkComboBoxText *combo_box, const gchar *text);
 
 //signals from GUI
 //add objects
@@ -89,8 +86,6 @@ void addLine(double x1, double y1, double x2, double y2, std::string name);
 void addPolygon(std::list<Point3D> pointList, std::string name);
 double getDoubleFromGtkEntry(GtkEntry *entry);
 void clearGtkEntry(GtkEntry *entry);
-//void AddListItem (GtkWidget *listbox, char *sText);
-
 
 
 void clearPointInput();
@@ -147,6 +142,7 @@ static gboolean redraw (GtkWidget *widget, cairo_t *cr, gpointer data){
   return FALSE;
 }
 
+
 double getDoubleFromGtkEntry(GtkEntry *entry)
 { 
   const gchar *text = gtk_entry_get_text(entry );  
@@ -172,7 +168,6 @@ void drawNewObject(DrawableObject obj)
       cairo_move_to(cr, viewport.transformX(point.getX(), main_window), viewport.transformY(point.getY(), main_window));
       cairo_line_to(cr, viewport.transformX(point.getX(), main_window), viewport.transformY(point.getY(), main_window));
       cairo_stroke(cr);
-      //gtk_list_store_insert_with_values(list_store, &iter, -1, cr);
       gtk_widget_queue_draw (window);
       break;
     }
@@ -204,7 +199,6 @@ void drawNewObject(DrawableObject obj)
     }
     default:
       break;
-
   }  
   cairo_destroy(cr);
 }
@@ -229,6 +223,7 @@ void addPoint(double x, double y, std::string name)
   drawNewObject(obj);
 }
 
+//adds a line to the surface
 void addLine(double x1, double y1, double x2, double y2, std::string name)
 {
   Point3D point1;
@@ -306,7 +301,6 @@ void clearAndRedraw()
   }   
 }
 
-
 /*Function that will be called when the  button "Adicionar objeto" is pressed*/
  extern "C" G_MODULE_EXPORT void button_open_menu()
  {
@@ -332,13 +326,8 @@ void clearAndRedraw()
   polygon_x_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_x_polygon" ) );
   polygon_y_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_y_polygon" ) );
 
-  
-  //g_signal_connect (second_window, "focus-tab", G_CALLBACK (currentTab), NULL);
-
   gtk_builder_connect_signals(gtkBuilder, NULL);
 
-  //mostra a segunda tela, o botão cancel deveria desaparecer a segunda tela, talvez alco como 
- // gtk_widget_hide(second_window); ??? não sei o nome do método, isto é um chute
   gtk_widget_show(second_window);
  } 
 
@@ -348,10 +337,6 @@ extern "C" G_MODULE_EXPORT void button_add_point_clicked()
   const gchar *name = gtk_entry_get_text( point_name_input );
   double x = getDoubleFromGtkEntry(point_x_input);
   double y = getDoubleFromGtkEntry(point_y_input);
-
-  g_print ("name %s\n", name);
-  g_print ("x start %f\n", x);
-  g_print ("y start %f\n", y);
 
   addPoint(x, y, name);
   clearPointInput();
@@ -367,12 +352,6 @@ extern "C" G_MODULE_EXPORT void button_add_line_clicked()
   double x_end = getDoubleFromGtkEntry(line_end_x_input);
   double y_end = getDoubleFromGtkEntry(line_end_y_input);
 
-  g_print ("name %s\n", name);
-  g_print ("x start %f\n", x_start);
-  g_print ("y start %f\n", y_start);
-  g_print ("x end %f\n", x_end);
-  g_print ("y end %f\n", y_end);
-
   addLine(x_start, y_start, x_end, y_end, name); 
   clearLineInput();
   gtk_widget_destroy(GTK_WIDGET(second_window));
@@ -387,9 +366,6 @@ extern "C" G_MODULE_EXPORT void button_add_point_to_polygon_clicked()
   point.setX(x);
   point.setY(y);
   point.setZ(1.0);  
-
-  g_print ("x start %f\n", x);
-  g_print ("y start %f\n", y);
 
   polygon_point_list.push_back(point);
   clearPolygonPointInput();
@@ -410,7 +386,7 @@ extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
 /* Button to left navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navigation); 
   main_window.setXMax(main_window.getXMax() - navigate);
   main_window.setXMin(main_window.getXMin() - navigate);
   clearAndRedraw();
@@ -418,31 +394,27 @@ extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
 /* Button to right navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_right_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navigation); 
   main_window.setXMax(main_window.getXMax() + navigate);
   main_window.setXMin(main_window.getXMin() + navigate);
   clearAndRedraw();
-
 }
 /* Button to up navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_up_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navigation); 
   main_window.setYMax(main_window.getYMax() + navigate);
   main_window.setYMin(main_window.getYMin() + navigate);
   clearAndRedraw();
-
 }
 
 /* Button to down navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_down_clicked()
 {
-  double navigate = getDoubleFromGtkEntry(passo_input_navegation); 
+  double navigate = getDoubleFromGtkEntry(passo_input_navigation); 
   main_window.setYMax(main_window.getYMax() - navigate);
   main_window.setYMin(main_window.getYMin() - navigate);
   clearAndRedraw();
-
-
 }
 
 /* Button to zoom in the window */ 
@@ -454,7 +426,6 @@ extern "C" G_MODULE_EXPORT void button_zoom_plus_clicked()
   main_window.setYMax(main_window.getYMax() / zoom);
   main_window.setYMin(main_window.getYMin() / zoom);
   clearAndRedraw();
-
 }
 
 /* Button to zoom out the window */ 
@@ -468,20 +439,25 @@ extern "C" G_MODULE_EXPORT void button_zoom_minus_clicked()
   clearAndRedraw();
 }
 
+/* Button to rotate objects */ 
+extern "C" G_MODULE_EXPORT void rotate_angle_button_clicked()
+{
+  double angle = getDoubleFromGtkEntry(rotate_angle_input); 
+
+  std::list<DrawableObject>::iterator it;
+  for (it= display_file.begin(); it != display_file.end(); ++it)
+  {                  
+    it->rotate(angle);
+  }   
+
+   clearAndRedraw();
+}
 
  /* Button to cancel*/ 
 extern "C" G_MODULE_EXPORT void button_cancel()
 {
   gtk_widget_destroy(GTK_WIDGET(second_window));
 }
-
-/*void listbox_changed (GtkWidget *widget, gpointer *data)
-{
-    //GtkList *listbox;
-
-    g_print ("%s\n", data);
-    DisplaySelectedItems (widget);
-}*/
 
 
 int main(int argc, char *argv[])
@@ -504,47 +480,16 @@ int main(int argc, char *argv[])
   window = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "main_window") );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "drawing_area") );
 
-
-  passo_input_navegation = GTK_ENTRY( gtk_builder_get_object( builder, "passo_input_navegation" ) );
+  //navigation and zoom input
+  passo_input_navigation = GTK_ENTRY( gtk_builder_get_object( builder, "passo_input_navigation" ) );
   passo_input_zoom = GTK_ENTRY( gtk_builder_get_object( builder, "passo_input_zoom" ) );
 
-  combo_box = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "combo") );
-  combo_box = gtk_combo_box_text_new();
-  gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), NULL, "Don't install.");
-  gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 1);
-
-
-
-
-  //list_store = gtk_list_store_new( 1, G_TYPE_STRING );
-
-
-     /* gtk_list_store_append( list_store, &iter );
-    gtk_list_store_set( list_store, &iter, 0, "Hello World once", -1 );
-    gtk_list_store_prepend( list_store, &iter );
-    gtk_list_store_set( list_store, &iter, 0, "Hello World twice", -1 );
-    gtk_list_store_insert( list_store, &iter, 1 );
-    gtk_list_store_set( list_store, &iter, 0, "Hello World last time", -1 );*/
-  /*list_store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
-  for(int i=0; i<10; i++) {
-    gtk_list_store_insert_with_values(list_store, NULL, -1, 0, "Default", 1, "white", 2, "black", -1);
-  }*/
-
-  //combo_box = gtk_combo_box_new_with_model(GTK_TREE_MODEL(list_store));
-
-  /*const char *distros[] = {"Select distribution", "Fedora", "Mint", "Suse"};
-
-  for (int i = 0; i < G_N_ELEMENTS (distros); i++)
-  {
-    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo_box), distros[i]);
-  }*/
-  //g_signal_connect (combo_box, "changed", G_CALLBACK (on_changed), NULL);
-
-  gtk_container_add (GTK_CONTAINER (window), combo_box);
+   //actions
+  rotate_angle_input  = GTK_ENTRY( gtk_builder_get_object( builder, "rotate_angle_input" ) );
 
   g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
   g_signal_connect (drawing_area,"configure-event", G_CALLBACK (create_surface), NULL);
-
+  g_signal_connect (window, "destroy", G_CALLBACK (on_window_main_destroy), NULL);
 
   gtk_builder_connect_signals(builder, NULL);
   gtk_widget_show(window);
