@@ -46,6 +46,12 @@ GtkEntry *polygon_x_input;
 GtkEntry *polygon_y_input;
 std::list<Point3D> polygon_point_list;
 
+//curva
+GtkEntry *curve_name_input;
+GtkEntry *curve_x_input;
+GtkEntry *curve_y_input;
+std::list<Point3D> curve_point_list;
+
 //actions
 GtkEntry *passo_input_navigation;
 GtkEntry *passo_input_zoom;
@@ -67,6 +73,8 @@ extern "C" G_MODULE_EXPORT void button_add_point_clicked();
 extern "C" G_MODULE_EXPORT void button_add_line_clicked();
 extern "C" G_MODULE_EXPORT void button_add_point_to_polygon_clicked();
 extern "C" G_MODULE_EXPORT void button_add_polygon_clicked();
+extern "C" G_MODULE_EXPORT void button_add_point_to_curve_clicked();
+extern "C" G_MODULE_EXPORT void button_add_curve_clicked();
 extern "C" G_MODULE_EXPORT void button_cancel();
 
 //navigate and zoom
@@ -326,6 +334,11 @@ void clearAndRedraw()
   polygon_x_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_x_polygon" ) );
   polygon_y_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_y_polygon" ) );
 
+   //curve init
+  curve_name_input = GTK_ENTRY( gtk_builder_get_object(gtkBuilder, "entry_name" ) );
+  curve_x_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_x_curve" ) );
+  curve_y_input = GTK_ENTRY( gtk_builder_get_object( gtkBuilder, "entry_y_curve" ) );
+
   gtk_builder_connect_signals(gtkBuilder, NULL);
 
   gtk_widget_show(second_window);
@@ -382,6 +395,18 @@ extern "C" G_MODULE_EXPORT void button_add_polygon_clicked()
   clearPolygonInput();
   gtk_widget_destroy(GTK_WIDGET(second_window));
 }
+
+extern "C" G_MODULE_EXPORT void button_add_point_to_curve_clicked()
+{
+  
+}
+
+ /* Button to add a new curva  na segunda tela*/ 
+extern "C" G_MODULE_EXPORT void button_add_curve_clicked()
+{
+  
+}
+
 
 /* Button to left navigate the window */ 
 extern "C" G_MODULE_EXPORT void button_navigate_left_clicked()
